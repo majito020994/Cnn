@@ -1,0 +1,183 @@
+// Llamar matriz de datos
+#include "matriz_entrenamiento.h"
+float datos_prueba[5]={5,3.5,1.3,0.3,1.0};
+int respuesta;
+
+void setup() {
+Serial.begin(9600);
+}
+
+void loop() {
+cnn(3,5,120);
+//respuesta=knn(3,3,5,120);
+Serial.println(cnn);
+delay (5000);
+}
+
+int knn(int k, int etiquetas,int tam_fil, int tam_col){
+int col;
+int fil;
+float aux;
+int i=0;
+int j=0;
+int etiqueta;
+float aux_etiq;
+float sumatoria=0; // sumatoria de la elevacion al cuadrador de cada una col
+float distancia=0; // raiz de la sumatoria 
+  /*matriz de K-vecinos
+    |1|2|3|-> numero de vecinos 
+    |2|1|1|-> asignacion del vecino por etiqueta 
+    |0.1||1|-> asignacion del vecino por etiqueta 
+    
+    */
+
+float matriz_k [3][k];
+    /*
+    etiquetas
+    |1|2|3|-> etiquetas q existe dentro de la base de datos 
+    |2|1|0|-> conteo de etiqueta de los k-vecinos
+      */
+int matriz_etiq[2][etiqueta];
+//asignar numero de vecinos y enceramos asignacion de etiqueta 
+
+
+for (;i<k;i++){
+  matriz_k[0][i]=i+1;
+  matriz_k[1][i]=0;
+  matriz_k[2][i]=3000.0+i;
+}
+ for (i=0;i<etiquetas;i++){
+ matriz_etiq [0][i]=i+1;
+ matriz_etiq [1][i]=0;
+ 
+}
+
+/*PASOS PARA KNN
+// Leer cada fila de la matriz de entranamiento 
+// Distancia entre la fila de la matriz con la nueva instancioa (vector de prueba)
+//ordenar la matriz matriz_k (determinar los k vecinos de menos distancia)
+//contar las etiquetas en la matriz k y asignar en mayroz etiquetas
+// elige el mayor numero de matriz etiquetas
+// retorno la etiqueta resultante 
+
+*/
+
+for(fil=0;fil<tam_fil;fil++){
+  for (col=0;col<tam_col-1;col++){//
+    sumatoria=sumatoria+pow(matriz[fil][col]-datos_prueba[col],2);
+    
+  }
+
+  distancia = sqrt(sumatoria);
+  //comparacion de nuevo dato con solo la distacncia mayor almacenada en matriz_k 
+ if (distancia<matriz_k[2][k-1]){
+  matriz_k[2][k-1]=distancia;
+  matriz_k[1][k-1]=matriz[fil][tam_col-1];
+   
+   //ordenar
+
+for (i=0;i<k;i++){
+  for (j=0;j<k-1;j++){
+    if(matriz_k[2][i]>matriz_k[2][j]){
+    //distancia
+    aux=matriz_k[2][j];
+      matriz_k[2][i]=matriz_k[2][j];
+      matriz_k[2][j]=aux;
+         //etiqueta
+      aux_etiq=matriz_k[1][j];
+      matriz_k[1][i]=matriz_k[1][j];
+      matriz_k[1][j]=aux_etiq;
+        }
+  }
+}
+       }
+       sumatoria=0;
+}
+  for(i=0;i<etiquetas;i++){
+  for(j=0;j<k;j++){
+    if(matriz_etiq[0][i]==matriz_k[1][j]){
+      matriz_etiq[1][i]++; 
+         }
+  }
+  }
+
+/*for (i=0;i<etiquetas;i++){
+Serial.println(matriz_etiq[1][i]);*/
+//buscar la etiqueta con mayor numero de vecinos
+
+for(i=0;i<etiquetas-1;i++){
+    if(matriz_etiq[1][i]<matriz_etiq[1][i+1]){
+      etiqueta=matriz_etiq[0][i+1];}
+      else{
+     etiqueta=matriz_etiq[0][i];
+    }
+return etiqueta;
+}
+     void cnn(int etiqueta,int tam_col, int tam_fil){
+    int i;
+    int j;
+    int l;
+    int storage;
+    int distancia; // sacar la distancia entre dos puntos
+    int fil_s; //para recorrer las filas del storage
+    int dist_total; //promedio de las distancias
+    int fin=1;
+    float centroid(0);
+      /*
+       * centroides ->promedio
+       *              promedio por columna y por etiqueta
+       *              almacena vectores
+       *              knn entre vectores y matriz de entrenamiento
+       */
+       float centroides[etiquetas][tam_col];
+       for(i=0;i<etiquetas;i++){ 
+        for(j=0;j<tam_col;j++){
+          centroides[i][j]=0;
+               
+        }
+       }
+       for(l=0;l<etiquetas;l++){
+        for(i=0;i<tam_col-1;i++){
+          for(j=0;j<40*(l+1);j++){ 
+            centroid= centroid+matriz[j][i];
+          }
+          centroides[0][i]=centroid/40; //promedio segun las etiquetas
+         centroides[0][i]=i+1;
+          Serial.println(centroides[1][i],4); 
+         Serial.println(',');
+          centroid=0;
+        }
+        Serial.println(' ');
+       }
+       if (fin!=storage){
+        tam_fil=0;
+        fin=num_s;
+         for(;tam_fil<120;tam_fil++){
+      for(fil_s=0;fil_s<storage;fil_s++){
+           for(tam_col=0;tam_col<4;tam_col++){
+              distancia=distancia+pow(matriz[tam_fil][tam_col]-centroides[fil_s][tam_col],2); // distancia entre dos puntos
+            }
+            dist_total=sqrt(distancia); // raiz de la distancia entre dos puntos
+            distancia=0; 
+            if(dist_menor>dist_total){ //ordenar las distancias menores
+               dist_menor=dist_total;
+               label=centroides[fil_s][4];
+              }
+        }
+        dist_menor=9000;
+        Serial.println(fin);
+        if(label==matriz[tam_fil][4]){
+          }
+          else{
+               for(tam_col=0;tam_col<5;tam_col++){
+                    centroides[storage][tam_col]=matriz[tam_fil][tam_col];
+                }
+                storage++;   
+            }
+   }
+   Serial.println("FINAL"); 
+   Serial.println(storage);
+  }  
+}
+       }
+   
